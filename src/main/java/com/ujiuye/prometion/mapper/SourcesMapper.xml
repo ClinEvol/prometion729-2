@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ujiuye.prometion.mapper.SourcesMapper">
+
+    <resultMap id="baseResultMap" type="Sources">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="url" column="url"/>
+        <result property="remark" column="remark"/>
+        <result property="pid" column="pid"/>
+        <result property="icon" column="icon"/>
+    </resultMap>
+
+    <select id="list" resultMap="baseResultMap">
+        SELECT * FROM sources
+    </select>
+
+    <insert id="save" parameterType="Role">
+        INSERT INTO `sources`(`id`, `name`, `url`, `remark`, `pid`, `icon`)
+        VALUES (#{id},#{name},#{url},#{remark},#{pid},#{icon});
+    </insert>
+
+    <update id="update" parameterType="Role">
+        UPDATE `sources`
+        SET `name` = #{name}, `url` =#{url}, `remark` =#{remark}, `pid` =#{pid},
+        `icon` = #{icon}
+        WHERE `id` = #{id};
+    </update>
+
+    <delete id="remove">
+        DELETE FROM `sources`  WHERE `id` = #{id};
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap">
+        SELECT * FROM `sources` WHERE `id` = #{id};
+    </select>
+
+
+
+</mapper>

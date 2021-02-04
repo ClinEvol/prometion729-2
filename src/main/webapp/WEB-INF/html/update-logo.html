@@ -1,0 +1,141 @@
+
+ <!DOCTYPE html>
+<html>
+
+<!-- Mirrored from www.gzsxt.cn/theme/hplus/table_basic.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:01 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>绿地中央广场综合物业办公系统 - 基础表格</title>
+    <meta name="keywords" content="绿地中央广场综合物业办公系统">
+    <meta name="description" content="绿地中央广场综合物业办公系统">
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    	<link href="css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min862f.css?v=4.1.0" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/customer.css">
+	<link href="css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        
+      <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>个人料资<small>>修改头像</small></h5>
+                    </div>
+                    <div class="ibox-content">
+
+                    	   <div class="row">
+                    	   		<div class="col-sm-4 col-sm-offset-1 logoshow">
+                                 <img id="logoShow" src="img/profile_small.jpg" />
+                            </div>
+                    	   </div>
+                        <form id="dataForm" class="form-horizontal">
+                       <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-1">
+                                    <input class="logoInput" name="myfile" type="file" class="form-control" >
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                        <div class="row">
+                     		<div class="hr-line-dashed"></div>
+                     	</div>
+                          
+                         <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-3 col-sm-offset-3 text-right">
+                                    <button type="button" class="btn btn-primary btnSave">保存内容</button>
+                                </div>
+                                <div class="col-sm-3">
+                                	<a href="list-function.html" class="btn btn-white">返回</a>
+                                	</div>
+                            </div>
+                       </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+    
+    
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="js/inputfile.js"></script>
+    <script src="js/plugins/sweetalert/sweetalert.min.js"></script>
+	
+   <script>
+	$(document).ready(function() {
+
+        var picUrl;
+		$(".logoInput").change(function () {
+            $.ajax({
+                url: "/employee/upload",
+                type: 'POST',
+                dataType:"text",
+                cache: false,//布尔值，表示浏览器是否缓存被请求页面。默认是 true。
+                data: new FormData($("#dataForm")[0]),//创建表单对象
+                processData: false,//	布尔值，规定通过请求发送的数据是否转换为查询字符串。默认是 true。
+                contentType: false,//发送数据到服务器时所使用的内容类型  multipart/form-data
+                success:function(response) {
+                    if(response=="false"){
+                        swal("文件上传失败！","文件上传失败,注意文件大小不能超过4M!","error");
+                    }else{
+                        $("#logoShow").prop("src",response);
+                        picUrl=response;
+                    }
+                }
+            });
+        });
+
+
+    $(".btnSave").click(function () {
+        $.post("/employee/updateLogo",{"pic":picUrl},function (response) {
+            if(response=="true"){
+                swal({"title":"头像修改成功","text":"","type":"success"});
+            }else{
+                swal("头像修改失败","","error");
+            }
+        },"")
+    });
+
+
+        showInfo();
+        function showInfo() {
+            $.getJSON("/employee/getLoginUser",function (response) {
+                $("#logoShow").prop("src",response.pic);
+            })
+        }
+
+
+
+
+
+		
+		
+		
+
+		
+
+		
+	});
+   </script>
+  
+</body>
+
+
+</html>
+    

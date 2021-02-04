@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>绿地中央广场综合物业办公系统 - 基础表格</title>
+    <meta name="keywords" content="综合办公系统">
+    <meta name="description" content="综合办公系统">
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    	<link href="css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    	<link href="css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="css/plugins/select/bootstrap-select.min.css" rel="stylesheet">
+    <style>
+        .pageList a{ padding: 0 5px;}
+        .active{ background: yellow;}
+    </style>
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper2 wrapper-content2 animated fadeInRight">
+    <div class="ibox float-e-margins">
+                   <div class="ibox-content">
+                        <div class="row">
+                            <form id="searchForm">
+                        		<div class="col-sm-3 col-sm-offset-2 text-right">
+                        			<h3><small>搜索条件:</small></h3>
+                        		</div>
+                            <div class="col-sm-2">
+                                <select name="type" class="selectpicker form-control">
+                                    <option value="0">选择类型</option>
+                                    <option value="1">员工姓名</option>
+                                    <option value="2">员工电话</option>
+                                    <option value="3">入职时间</option>
+                                </select>
+                            </div>
+                           
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <input name="keyword" type="text" placeholder="请输入关键词" class="input-sm form-control">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-primary btnSearch"><i class="fa fa-search"></i>搜索</button>
+                                    </span>
+                                </div>                                
+                            </div>
+                            <div class="col-sm-2 text-right">
+                            	 <a href="save-employee.html" class="btn btn-sm btn-primary" type="button"><i class="fa fa-plus-circle"></i> 添加员工</a>
+                            </div>
+                            </form>
+                        </div>
+                        <div class="hr-line-dashed2"></div>
+                        <div class="table-responsive">
+                            <table class="table table-striped list-table">
+                                <thead>
+                                    <tr>
+                                        <th>选择</th>
+                                        <th>序号</th>
+                                        <th>姓名</th>
+                                        <th>性别</th>
+                                        <th>年龄</th>
+                                        <th>联系电话</th>
+                                        <th>入职时间</th>
+                                        <th class="text-center">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                       
+                        <div class="row">
+
+	                        	<div class="col-sm-5">
+	                        		<button class="btn btn-sm btn-primary" type="button"><i class="fa fa-check-square-o"></i> 全选</button>
+	                        		<button class="btn btn-sm btn-primary" type="button"><i class="fa fa-square-o"></i> 反选</button>
+	                        		<button class="btn btn-sm btn-primary" type="button"><i class="fa fa-times-circle-o"></i> 删除</button>
+	                        		<a id="demo1" class="btn btn-sm btn-primary getExcel" href="/file/download?pageNum=1" ><i class="fa fa-table"></i> 导出Excel</a>
+	                        	</div>
+
+							<div class="col-sm-7 text-right pageList">
+						
+
+	                           
+							</div>
+                        </div>
+						
+                    </div>
+                </div>
+     </div>       
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+     <script src="js/plugins/select/bootstrap-select.min.js"></script>
+    <script src="js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="js/page.js"></script>
+   <script>
+
+       var gobalPageNum=0;//记录当前是第几页
+       var gobalSize=0;  //记录当前这一页有几条数据
+
+       function dataList(pageNum,type,keyword) {
+           $.getJSON("/employee/list",{
+               "pageNum":pageNum,
+               "type":type,
+               "keyword":keyword
+           },function (response) {
+               gobalPageNum=response.pageNum;
+               gobalSize=response.size;
+               $("tbody").html("");
+               $(response.list).each(function () {
+                   var $tr=`<tr>
+                                <td><input  type="checkbox"></td>
+                                <td>`+this.eid+`</td>
+                                <td>`+this.ename+`</td>
+                                <td>`+this.esex+`</td>
+                                <td>`+this.eage+`</td>
+                                <td>`+this.telephone+`</td>
+                                <td>`+this.hiredate+`</td>
+                                <td class="text-right">
+                                    <a href='update-employee.html?eid=`+this.eid+`' class="btn btn-primary btn-xs"><i class="fa fa-edit"></i>编辑</a>
+                                    <a href='show-employee.html?eid=`+this.eid+`' class="btn btn-primary btn-xs"><i class="fa fa-eye"></i>查看</a>
+
+                                    <button class="btn btn-danger btn-xs btndel"><i class="fa fa-close"></i>删除</button>
+                                </td>
+                             </tr>`;
+                   $("tbody").append($tr);
+               });
+               createPages(response);//调用分页方法
+           })
+       }
+
+
+
+
+
+	$(document).ready(function() {
+		// 设置按钮的样式
+		$('.selectpicker').selectpicker('setStyle', 'btn-white').selectpicker('setStyle', 'btn-sm');
+
+
+		$(".getExcel").click(function () {
+		    $(this).prop("href","/file/download?pageNum="+gobalPageNum);
+            return true;
+        });
+工
+        var seachkeyword="";
+        var seachtype=0;
+        $(".btnSearch").click(function () {
+            seachkeyword=$("input[name=keyword]").val();
+            seachtype=$("select[name=type]").val();
+            dataList(1,seachtype,seachkeyword);
+        });
+
+        $("body").on("click",".pageList a",function () {
+
+            var pageNum=$(this).data("pagenum");
+            console.log(seachkeyword+","+seachtype+","+pageNum)
+            dataList(pageNum,seachtype,seachkeyword);
+        });
+
+
+		//加载员工数据
+        dataList(1);
+
+
+
+
+        //点击删除
+        $("body").on("click",".btndel",function () {
+            //获取被点击元素这一行tr的第二个td的文本
+            var eid=$(this).parents("tr").children().eq(1).text();
+            swal({
+                title: "您确定要删除这条信息吗",
+                text: "删除后将无法恢复，请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "删除",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {//此函数是点击删除执行的函数
+                remove(eid);
+            });
+        });
+
+
+        function remove(eid) {
+            $.post("/employee/remove",{"eid":eid},function (response) {
+                if(response=="true"){
+                    swal({"title":"删除成功","text":"为您刷页面！","type":"success"},function () {
+                        if(gobalSize-1>0){
+                            dataList(gobalPageNum);
+                        }else{//要向前一页
+                            dataList(gobalPageNum-1);
+                        }
+                    });
+                }else if(response=="error"){
+                    swal("删除失败！", "该员工存关联数据，请先删除关联数据", "error");
+                }else{
+                    swal("删除失败！", "出现未知原因", "error");
+                }
+            },"text");
+        }
+
+    });
+    </script>
+    
+</body>
+
+
+</html>
+    

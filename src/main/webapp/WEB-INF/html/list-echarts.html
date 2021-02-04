@@ -1,0 +1,136 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>绿地中央广场综合物业办公系统 - 基础表格</title>
+    <meta name="keywords" content="绿地中央广场综合物业办公系统">
+    <meta name="description" content="绿地中央广场综合物业办公系统">
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    	<link href="css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper2 wrapper-content2 animated fadeInRight">
+    		<div class="row">
+
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>柱状图</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="graph_flot.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="graph_flot.html#">选项1</a>
+                                </li>
+                                <li><a href="graph_flot.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="echarts" style="height: 500px" id="echarts-bar-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>       
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+     <script src="js/plugins/select/bootstrap-select.min.js"></script>
+    <script src="js/plugins/sweetalert/sweetalert.min.js"></script>
+	<script src="js/plugins/echarts/echarts-all.js"></script>
+   <script>
+	$(document).ready(function() {
+		// 设置按钮的样式
+		$('.selectpicker').selectpicker('setStyle', 'btn-white').selectpicker('setStyle', 'btn-sm');
+
+		var myChart = echarts.init(document.getElementById('echarts-bar-chart'));
+
+        var name = [];
+        var count = [];
+        var click = [];
+        load();
+        function load() {
+            $.getJSON("/forumsort/list",function (response) {
+                $(response).each(function () {
+                    name.push(this.title);
+                    count.push(this.count);
+                    click.push(this.click);
+                });
+                myChart.setOption(option);
+            })
+        }
+
+
+
+        var option = {
+            title: {
+                text: '版块数据'
+            },
+            legend: {
+                data: ['帖子总量','浏览量']
+            },
+            xAxis: {
+                type: 'category',
+                data:name
+            },
+            tooltip: {},
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: count,
+                type: 'bar',
+                name: '帖子总量',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(220, 220, 220, 0.8)'
+                },
+                //平均值
+                markLine: {
+                    data: [{
+                        type: 'average',
+                        name: '平均值'
+                    }]
+                }
+            },{
+                data: click,
+                type: 'bar',
+                name: '浏览量',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(220, 220, 220, 0.8)'
+                },
+                //平均值
+                markLine: {
+                    data: [{
+                        type: 'average',
+                        name: '平均值'
+                    }]
+                }
+            }]
+        };
+
+	});
+    </script>
+    
+</body>
+
+
+</html>

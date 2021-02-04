@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ujiuye.prometion.mapper.EmployeeMapper">
+
+    <resultMap id="baseResultMap" type="Employee">
+        <id property="eid" column="eid"/>
+        <result property="ename" column="ename"/>
+        <result property="esex" column="esex"/>
+        <result property="eage" column="eage"/>
+        <result property="telephone" column="telephone"/>
+        <result property="hiredate" column="hiredate"/>
+        <result property="pnum" column="pnum"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="remark" column="remark"/>
+        <result property="dfk" column="dfk"/>
+        <result property="pic" column="pic"/>
+        <collection property="employeeRoleList" ofType="com.ujiuye.prometion.pojo.EmployeeRole"
+                    column="eid" select="com.ujiuye.prometion.mapper.EmployeeRoleMapper.listByEmpFk"/>
+    </resultMap>
+
+    <select id="list" resultMap="baseResultMap">
+        SELECT * FROM employee
+        <where>
+            <if test="name != null and name != ''">
+                AND `ename`=#{name}
+            </if>
+            <if test="tel != null and tel != ''">
+                AND `telephone`=#{tel}
+            </if>
+            <if test="hirdate != null and hirdate != ''">
+                AND `hiredate`=#{hirdate}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="Employee" useGeneratedKeys="true" keyProperty="eid">
+        INSERT INTO `employee`(`eid`, `ename`, `esex`, `eage`, `telephone`, `hiredate`, `pnum`,
+        `username`, `password`, `remark`, `dfk`, `pic`)
+        VALUES (#{eid},#{ename},#{esex},#{eage},#{telephone},#{hiredate},#{pnum},#{username},
+        #{password},#{remark},#{dfk},#{pic});
+    </insert>
+
+    <update id="update" parameterType="Employee">
+        UPDATE `employee`
+        <set>
+            <if test="ename != null and ename != ''">
+                `ename` = #{ename},
+            </if>
+            <if test="esex != null and esex != ''">
+                `esex` = #{esex},
+            </if>
+            <if test="eage != null">
+                `eage` =#{eage},
+            </if>
+            <if test="telephone != null and telephone != ''">
+                `telephone` = #{telephone},
+            </if>
+            <if test="hiredate != null">
+                `hiredate` =#{hiredate},
+            </if>
+            <if test=" pnum != null and pnum != ''">
+                `pnum` =#{pnum},
+            </if>
+            <if test="username != null and username != ''">
+                `username` =#{username},
+            </if>
+            <if test="password != null and password != ''">
+                `password` =#{password},
+            </if>
+            <if test="remark != null and remark != ''">
+                `remark` =#{remark},
+            </if>
+            <if test="dfk != null">
+                `dfk` =#{dfk},
+            </if>
+            <if test="pic != null and pic != ''">
+                `pic` =#{pic}
+            </if>
+        </set>
+        WHERE `eid` = #{eid};
+    </update>
+
+    <delete id="remove">
+        DELETE FROM employee WHERE eid=#{eid}
+    </delete>
+
+    <select id="getByEid" resultMap="baseResultMap">
+        SELECT * FROM employee WHERE eid=#{eid}
+    </select>
+
+    <select id="getByUserName" resultType="Employee">
+        SELECT * FROM employee WHERE `username`=#{username}
+    </select>
+
+    <select id="sexNumberList" resultType="SexNumber">
+        SELECT COUNT(*) number,esex FROM employee GROUP BY esex
+    </select>
+
+    <select id="countAge" resultType="int">
+        SELECT count(*) FROM employee WHERE eage BETWEEN #{begin} AND #{end}
+    </select>
+
+</mapper>

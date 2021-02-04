@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ujiuye.prometion.mapper.RoleMapper">
+
+    <resultMap id="baseResultMap" type="Role">
+        <id property="roleid" column="roleid"/>
+        <result property="rolename" column="rolename"/>
+        <result property="roledis" column="roledis"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="list" resultMap="baseResultMap">
+        SELECT * FROM role
+    </select>
+
+    <insert id="save" parameterType="Role">
+        INSERT INTO `role`(`roleid`, `rolename`, `roledis`, `status`)
+        VALUES (#{roleid},#{rolename},#{roledis},#{status});
+    </insert>
+
+    <update id="update" parameterType="Role">
+        UPDATE `role`
+        SET `rolename` = #{rolename}, `roledis` = #{roledis}, `status` = #{status}
+        WHERE `roleid` = #{roleid};
+    </update>
+
+    <delete id="remove">
+        DELETE FROM `role`  WHERE `roleid` = #{id};
+    </delete>
+
+    <select id="getById" resultMap="baseResultMap">
+        SELECT * FROM `role` WHERE `roleid` = #{id};
+    </select>
+
+    <delete id="removeList" parameterType="java.util.List">
+        DELETE FROM role
+        <foreach collection="ids" separator="," open="WHERE roleid IN(" close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
